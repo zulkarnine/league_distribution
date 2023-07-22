@@ -2,6 +2,7 @@
 
 import random
 import argparse
+import itertools
 
 
 def distribute_teams(team_count, group_count, randomize_order_in_group=False, teams=[], verbose=False):
@@ -56,6 +57,17 @@ def print_groups(groups):
         print()
 
 
+def print_group_stage_matches(groups):
+    print()
+    for i in range(len(groups)):
+        group_name = chr(ord('A') + i)
+        print(f"Group {group_name} matches:")
+        group = groups[i]
+        for match in itertools.combinations(group, 2):
+            print(f"{match[0]} vs {match[1]}")
+        print()
+
+
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser()
 
@@ -70,7 +82,6 @@ if __name__ == '__main__':
                             help="Randomize order within group.")
     args = arg_parser.parse_args()
 
-    team_count = args.team_count
     group_count = args.group
     teams_file = args.teams_file  # Reads teams from file if provided.
 
@@ -79,6 +90,9 @@ if __name__ == '__main__':
         with open(teams_file, 'r') as f:
             teams = [line.strip() for line in f.readlines()]
 
+    team_count = len(teams) if teams else args.team_count
+
     print(f"Generating league distribution for {team_count} teams in {group_count} groups")
     groups = distribute_teams(team_count, group_count, args.randomize_order_in_group, teams, verbose=args.verbose)
     print_groups(groups)
+    print_group_stage_matches(groups)
