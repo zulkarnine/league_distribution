@@ -38,12 +38,14 @@ def distribute_teams(team_count, group_count, teams=[], verbose=False):
     return groups
 
 
-def print_groups(groups):
+def print_groups(groups, randomize_order_in_group):
     print()
     for i in range(len(groups)):
         group_name = chr(ord('A') + i)
         print(f"Group: {group_name}")
         group = groups[i]
+        if randomize_order_in_group:
+            random.shuffle(group)
         for j in range(len(group)):
             print(f"{group_name}{j + 1}: team-{group[j]}")
         print()
@@ -58,6 +60,8 @@ if __name__ == '__main__':
 
     arg_parser.add_argument("-g", "--group", type=int, help="Number of groups.", required=True)
     arg_parser.add_argument("-v", "--verbose", type=bool, help="Shows verbose messages.")
+    arg_parser.add_argument("-r", "--randomize_order_in_group", type=bool, help="Randomize order within group.",
+                            default=True)
     args = arg_parser.parse_args()
 
     team_count = args.team_count
@@ -71,4 +75,4 @@ if __name__ == '__main__':
 
     print(f"Generating league distribution for {team_count} teams in {group_count} groups")
     groups = distribute_teams(team_count, group_count, teams)
-    print_groups(groups)
+    print_groups(groups, args.randomize_order_in_group)
