@@ -1,6 +1,7 @@
 # Program to distribute sorted teams into N groups.
 
 import random
+import argparse
 
 
 def distribute_teams(team_count, group_count):
@@ -37,10 +38,18 @@ def print_groups(groups):
         print(f"Group: {group_name}")
         group = groups[i]
         for j in range(len(group)):
-            print(f"{group_name}{j+1}: team-{group[j]}")
+            print(f"{group_name}{j + 1}: team-{group[j]}")
         print()
 
 
 if __name__ == '__main__':
-    groups = distribute_teams(16, 4)
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument("-t", "--team", type=int, help="Number of teams", required=True)
+    arg_parser.add_argument("-g", "--group", type=int, help="Number of groups", required=True)
+    args = arg_parser.parse_args()
+
+    team_count = args.team
+    group_count = args.group
+    print(f"Generating leagure distribution for {team_count} teams in {group_count} groups")
+    groups = distribute_teams(team_count, group_count)
     print_groups(groups)
