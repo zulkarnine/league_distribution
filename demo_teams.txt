@@ -1,0 +1,16 @@
+Pro-1
+Pro-2
+Pro-3
+Pro-4
+Semi-pro-1
+Semi-pro-2
+Semi-pro-3
+Semi-pro-4
+Beginner-1
+Beginner-2
+Beginner-3
+Beginner-4
+Beginner-5
+Beginner-6
+Beginner-7
+Beginner-8

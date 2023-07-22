@@ -4,10 +4,14 @@ import random
 import argparse
 
 
-def distribute_teams(team_count, group_count):
+def distribute_teams(team_count, group_count, teams=[], verbose=False):
     # Team number starts from 1 (not 0).
-    teams = [i for i in range(1, team_count + 1)]
-    print("teams: ", teams)
+    if not teams:
+        teams = [i for i in range(1, team_count + 1)]
+    else:
+        team_count = len(teams)
+    if verbose:
+        print("teams: ", teams)
 
     # Create ranked buckets to distribute to n different groups.
     bucket_start = 0
@@ -15,19 +19,22 @@ def distribute_teams(team_count, group_count):
     while bucket_start < team_count:
         ranked_buckets.append(teams[bucket_start: bucket_start + group_count])
         bucket_start += group_count
-    print("ranked buckets: ", ranked_buckets)
+    if verbose:
+        print("ranked buckets: ", ranked_buckets)
 
     # randomize ranked buckets.
     for bucket in ranked_buckets:
         random.shuffle(bucket)
-    print("shuffled ranked buckets:", ranked_buckets)
+    if verbose:
+        print("shuffled ranked buckets:", ranked_buckets)
 
     # Then distribute them to groups.
     groups = [[] for _ in range(group_count)]
     for bucket in ranked_buckets:
         for i in range(len(bucket)):
             groups[i].append(bucket[i])
-    print("groups: ", groups)
+    if verbose:
+        print("groups: ", groups)
     return groups
 
 
@@ -44,12 +51,24 @@ def print_groups(groups):
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument("-t", "--team", type=int, help="Number of teams", required=True)
-    arg_parser.add_argument("-g", "--group", type=int, help="Number of groups", required=True)
+
+    team_group = arg_parser.add_mutually_exclusive_group(required=True)
+    team_group.add_argument("-t", "--team_count", type=int, help="Number of teams.")
+    team_group.add_argument("-f", "--teams_file", type=str, help="File with teams (sorted).")
+
+    arg_parser.add_argument("-g", "--group", type=int, help="Number of groups.", required=True)
+    arg_parser.add_argument("-v", "--verbose", type=bool, help="Shows verbose messages.")
     args = arg_parser.parse_args()
 
-    team_count = args.team
+    team_count = args.team_count
     group_count = args.group
-    print(f"Generating leagure distribution for {team_count} teams in {group_count} groups")
-    groups = distribute_teams(team_count, group_count)
+    teams_file = args.teams_file  # Reads teams from file if provided.
+
+    teams = []
+    if teams_file:
+        with open(teams_file, 'r') as f:
+            teams = [line.strip() for line in f.readlines()]
+
+    print(f"Generating league distribution for {team_count} teams in {group_count} groups")
+    groups = distribute_teams(team_count, group_count, teams)
     print_groups(groups)
