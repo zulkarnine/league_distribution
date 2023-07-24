@@ -54,9 +54,9 @@ def print_groups(groups):
         group = groups[i]
         for j in range(len(group)):
             if group[j] is int:
-                print(f"{group_name}{j + 1}:\tteam-{group[j]}")
+                print(f"{group_name}{j + 1}: team-{group[j]}")
             else:
-                print(f"{group_name}{j + 1}:\t{group[j]}")
+                print(f"{group_name}{j + 1}: {group[j]}")
         print()
 
 
@@ -118,11 +118,11 @@ def print_group_stage_matches(groups, parallelism=1):
             parallel_matches = make_parallel_schedule(matches, parallelism)
             slot_count = len(parallel_matches[0])
             for j in range(slot_count):
-                print(f"Slot-{j + 1:2}:\t", end="")
+                print(f"Slot-{j + 1:2}: ", end="")
                 for k in range(parallelism):
                     match_str = get_match(parallel_matches[k][j])
                     print(f"{match_str}", end=" " * (max_match_name_len - len(match_str) + 5))
-                    print("\t", end="")
+                    print(" : ", end="")
                 print()
         print()
 
